@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Simple Task Management</string>
+    <string name="task_management_app">Task Managament App</string>
+    <string name="home_title_text">Home</string>
+    <string name="completed_tasks_title_text">Completed Tasks</string>
+    <string name="overdue_tasks_title_text">Overdue Tasks</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_task">Add Task</string>
+    <string name="what_is_to_be_done">What is to be done?</string>
+    <string name="hint_task_title">Task title</string>
+    <string name="when_its_due">When it\'s due?</string>
+    <string name="text_details">Details</string>
+    <string name="text_important">Important</string>
+    <string name="done_title_text">Done</string>
+    <string name="hint_task_details">Task details</string>
+    <string name="text_pending">Pending</string>
+    <string name="text_date">04\nAug</string>
+    <string name="text_remaining_time">0 days - 2 hours</string>
+    <string name="empty_field">Empty</string>
+    <string name="no_overdue_tasks">No overdue tasks!</string>
+    <string name="no_tasks">No tasks?\nWrite your first task now!</string>
+    <string name="text_completed">Completed</string>
+    <string name="no_completed_tasks">No completed tasks!</string>
+    <string name="edit_task_title">Edit task</string>
+    <string name="alarm_service_label">OverDue tasks!</string>
+</resources>
