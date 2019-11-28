@@ -126,7 +126,7 @@ public class AddingTaskActivity extends AppCompatActivity implements DatePickerD
         }
 
         tvTaskDate.setText(day.trim() + "/" + month.trim() + "/" + year);
-        currentDate = (day.trim() + "" + month.trim() + "" + year);
+        currentDate = (day.trim() + "/" + month.trim() + "/" + year);
         Log.e("jobDate", currentDate);
     }
 }

@@ -58,7 +58,7 @@ public class CompletedTasksAdapter extends RecyclerView.Adapter<CompletedTasksAd
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Task task = taskList.get(position);
-        SimpleDateFormat format1 = new SimpleDateFormat("ddMMyyyy");
+        SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat format2 = new SimpleDateFormat("MMMM");
         SimpleDateFormat format3 = new SimpleDateFormat("dd");
         SimpleDateFormat format4 = new SimpleDateFormat("yyyy");

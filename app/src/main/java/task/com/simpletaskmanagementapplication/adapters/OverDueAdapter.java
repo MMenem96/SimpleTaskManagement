@@ -13,9 +13,9 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -70,7 +70,7 @@ public class OverDueAdapter extends RecyclerView.Adapter<OverDueAdapter.MyViewHo
         Log.e("hours", getRemainingHours(task.getTaskTimeStamp()).trim());
         holder.taskTitle.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_overdue_task), null, null, null);
 
-        SimpleDateFormat format1 = new SimpleDateFormat("ddMMyyyy");
+        SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat format2 = new SimpleDateFormat("MMMM");
         SimpleDateFormat format3 = new SimpleDateFormat("dd");
         Date date = null;
@@ -83,7 +83,7 @@ public class OverDueAdapter extends RecyclerView.Adapter<OverDueAdapter.MyViewHo
         String monthName = format2.format(date);
         String day = format3.format(date);
         holder.taskDueDate.setText(day + "\n" + monthName.substring(0, 3));
-        holder.taskRemainingDays.setText(getRemainingDays(task.getTaskDueDate()).trim() + " days" + " - " + getRemainingHours(task.getTaskTimeStamp()).trim() + " hours");
+        holder.taskRemainingDays.setText(getRemainingDays(task.getTaskDueDate()).trim() + " days" + " - " + "0 hours");
         holder.taskTitle.setText(task.getTaskTitle());
         holder.taskTitle.setTextColor(Color.RED);
         holder.taskDueDate.setTextColor(Color.RED);
@@ -141,16 +141,28 @@ public class OverDueAdapter extends RecyclerView.Adapter<OverDueAdapter.MyViewHo
         return taskList.size();
     }
 
-    private String getRemainingDays(String dueDate) {
-        Calendar calCurr = Calendar.getInstance();
-        Calendar day = Calendar.getInstance();
+    private String getRemainingDays(String userDueDate) {
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date dueDate = null;
         try {
-            day.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(dueDate));
-        } catch (ParseException e) {
-            e.printStackTrace();
+            dueDate = formatter.parse(userDueDate);
+        } catch (ParseException ex) {
+            ex.printStackTrace();
         }
-        if (day.after(calCurr)) {
-            return (day.get(Calendar.DAY_OF_MONTH) - (calCurr.get(Calendar.DAY_OF_MONTH))) + "";
+
+        DateFormat formatters = new SimpleDateFormat("dd/MM/yyyy");
+
+        Date today = new Date();
+        Date todayDate = null;
+        try {
+            todayDate = formatters.parse(formatters.format(today));
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+
+
+        if (dueDate.after(todayDate)) {
+            return ((dueDate.getTime() / (1000 * 60 * 60 * 24)) - (todayDate.getTime() / (1000 * 60 * 60 * 24))) + "";
         } else {
             return "0";
         }

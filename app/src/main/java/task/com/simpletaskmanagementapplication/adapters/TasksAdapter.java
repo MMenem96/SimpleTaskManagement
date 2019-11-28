@@ -16,12 +16,13 @@ import android.widget.Toast;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import task.com.simpletaskmanagementapplication.R;
 import task.com.simpletaskmanagementapplication.activities.EditTaskActivity;
@@ -72,7 +73,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.MyViewHolder
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Task task = taskList.get(position);
         holder.statusSwitch.setChecked(false);
-        SimpleDateFormat format1 = new SimpleDateFormat("ddMMyyyy");
+        SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat format2 = new SimpleDateFormat("MMMM");
         SimpleDateFormat format3 = new SimpleDateFormat("dd");
         Date date = null;
@@ -88,15 +89,31 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.MyViewHolder
         holder.taskRemainingDays.setText(getRemainingDays(task.getTaskDueDate()) + " days" + " - " + getRemainingHours(task.getTaskTimeStamp()).trim() + " hours");
         holder.taskTitle.setText(task.getTaskTitle());
 
-        Date Currentdate = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date dueDate = null;
+        try {
+            dueDate = formatter.parse(task.getTaskDueDate());
+            System.out.println(dueDate);
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
 
-        int currentDateNu = Integer.valueOf(sdf.format(Currentdate));
-        if (currentDateNu > Integer.valueOf(task.getTaskDueDate())) {
+        DateFormat formatters = new SimpleDateFormat("dd/MM/yyyy");
+
+        Date today = new Date();
+        Date todayDate = null;
+        try {
+            todayDate = formatters.parse(formatters.format(today));
+            System.out.println(todayDate);
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        if (dueDate.before(todayDate)) {
             holder.taskTitle.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_overdue_task), null, null, null);
             holder.taskTitle.setTextColor(Color.RED);
             holder.taskDueDate.setTextColor(Color.RED);
-        } else if (currentDateNu == Integer.valueOf(task.getTaskDueDate())) {
+        } else if (dueDate.equals(todayDate)) {
             holder.taskTitle.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.drawable.ic_today_task), null, null, null);
             holder.taskTitle.setTextColor(Color.BLACK);
             holder.taskDueDate.setTextColor(Color.BLACK);
@@ -168,44 +185,46 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.MyViewHolder
 
     private String getRemainingHours(String taskTimeStamp) {
 
-        String hourseRemainig = "0";
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss");
-
-        try {
-
-            Date oldDate = dateFormat.parse(taskTimeStamp);
-            Date currentDate = new Date();
-            long diff = oldDate.getTime() - currentDate.getTime();
-            long seconds = diff / 1000;
-            long minutes = seconds / 60;
-            long hours = minutes / 60;
-            hourseRemainig = hours + "";
-            if (hours >= 0) {
-                hourseRemainig = hours + "";
-            } else {
-                hourseRemainig = Math.abs(hours) + "";
-
-            }
-        } catch (ParseException e) {
-
-            e.printStackTrace();
-        }
-        return hourseRemainig;
-    }
-
-    private String getRemainingDays(String dueDate) {
         Calendar calCurr = Calendar.getInstance();
         Calendar day = Calendar.getInstance();
         try {
-            Date date = new SimpleDateFormat("ddMMyyyy").parse(dueDate);
-            String dateText = new SimpleDateFormat("dd/MM/yyyy").format(date);
-            day.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(dateText));
+            day.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(taskTimeStamp));
+            long msDiff = day.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
+            long hoursDiff = TimeUnit.MILLISECONDS.toHours(msDiff);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         if (day.after(calCurr)) {
-            return (day.get(Calendar.DAY_OF_MONTH) - (calCurr.get(Calendar.DAY_OF_MONTH))) + "";
+            long msDiff = day.getTimeInMillis() - calCurr.getTimeInMillis();
+            long hoursDiff = TimeUnit.MILLISECONDS.toHours(msDiff);
+            return hoursDiff + "";
+        } else {
+            return "0";
+        }
+    }
+
+    private String getRemainingDays(String userDueDate) {
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date dueDate = null;
+        try {
+            dueDate = formatter.parse(userDueDate);
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        DateFormat formatters = new SimpleDateFormat("dd/MM/yyyy");
+
+        Date today = new Date();
+        Date todayDate = null;
+        try {
+            todayDate = formatters.parse(formatters.format(today));
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+
+
+        if (dueDate.after(todayDate)) {
+            return ((dueDate.getTime() / (1000 * 60 * 60 * 24)) - (todayDate.getTime() / (1000 * 60 * 60 * 24))) + "";
         } else {
             return "0";
         }

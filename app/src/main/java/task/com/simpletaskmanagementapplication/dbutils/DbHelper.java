@@ -7,12 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -105,7 +105,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // Select All Query
         String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=0" + " ORDER BY " +
-                Task.COLUMN_TASK_DUE_DATE + " ASC";
+                Task.COLUMN_TASK_DUE_DATE + " Desc";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -135,18 +135,21 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<Task> getAllOverDueTasks() {
-        Calendar calCurr = Calendar.getInstance();
-        Calendar day = Calendar.getInstance();
+
 
         List<Task> tasks = new ArrayList<>();
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+
+        Date date = Calendar.getInstance().getTime();
+
+        // Display a date in day, month, year format
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String today = formatter.format(date);
+        System.out.println("Today : " + today);
 
 
-        Log.e("currentDate!", sdf.format(date) + "");
-
+        String test="substr("+Task.COLUMN_TASK_DUE_DATE+",7,4)||'-'||substr("+Task.COLUMN_TASK_DUE_DATE+",4,2)||'-'||substr("+Task.COLUMN_TASK_DUE_DATE+",1,2) < date('now')";
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=0" + " AND " + Task.COLUMN_TASK_DUE_DATE + "<" + sdf.format(date) + " ORDER BY " +
+        String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=0" + " AND " +test + " ORDER BY " +
                 Task.COLUMN_TASK_DUE_DATE + " ASC";
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -207,19 +210,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // return tasks list
         return tasks;
-    }
-
-    public int getTasksCount() {
-        String countQuery = "SELECT  * FROM " + Task.TABLE_NAME;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-
-        int count = cursor.getCount();
-        cursor.close();
-
-
-        // return count
-        return count;
     }
 
     public int updateTask(Task task) {
