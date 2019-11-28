@@ -102,7 +102,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // Select All Query
         String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=0" + " ORDER BY date(" +
-                test + ") DESC";
+                test + ")<date('now')  ASC," + Task.COLUMN_TIMESTAMP + "  DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
