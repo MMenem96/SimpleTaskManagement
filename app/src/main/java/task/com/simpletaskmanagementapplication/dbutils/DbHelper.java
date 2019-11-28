@@ -98,10 +98,11 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public List<Task> getAllTasks() {
         List<Task> tasks = new ArrayList<>();
+        String test = "substr(" + Task.COLUMN_TASK_DUE_DATE + ",7,4)||'-'||substr(" + Task.COLUMN_TASK_DUE_DATE + ",4,2)||'-'||substr(" + Task.COLUMN_TASK_DUE_DATE + ",1,2)";
 
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=0" + " ORDER BY " +
-                Task.COLUMN_TASK_DUE_DATE + " Desc";
+        String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=0" + " ORDER BY date(" +
+                test + ") DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
