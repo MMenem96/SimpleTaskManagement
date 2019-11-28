@@ -7,11 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -139,17 +135,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
         List<Task> tasks = new ArrayList<>();
 
-        Date date = Calendar.getInstance().getTime();
 
-        // Display a date in day, month, year format
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        String today = formatter.format(date);
-        System.out.println("Today : " + today);
-
-
-        String test="substr("+Task.COLUMN_TASK_DUE_DATE+",7,4)||'-'||substr("+Task.COLUMN_TASK_DUE_DATE+",4,2)||'-'||substr("+Task.COLUMN_TASK_DUE_DATE+",1,2) < date('now')";
+        String test = "substr(" + Task.COLUMN_TASK_DUE_DATE + ",7,4)||'-'||substr(" + Task.COLUMN_TASK_DUE_DATE + ",4,2)||'-'||substr(" + Task.COLUMN_TASK_DUE_DATE + ",1,2) < date('now')";
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=0" + " AND " +test + " ORDER BY " +
+        String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=0" + " AND " + test + " ORDER BY " +
                 Task.COLUMN_TASK_DUE_DATE + " ASC";
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -184,7 +173,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // Select All Query
         String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=1" + " ORDER BY " +
-                Task.COLUMN_TIMESTAMP + " ASC";
+                Task.COLUMN_TIMESTAMP + " DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
