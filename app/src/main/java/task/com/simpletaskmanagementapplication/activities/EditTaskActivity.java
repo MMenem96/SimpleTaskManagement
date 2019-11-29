@@ -77,6 +77,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
             task = (Task) getIntent().getExtras().get("task");
             etTaskTitle.setText(task.getTaskTitle());
             tvTaskDate.setText(task.getTaskDueDate());
+            currentDate = task.getTaskDueDate();
             etTaskDetails.setText(task.getTaskDetails());
             if (task.getTaskCompletionStatus() == 0) {
                 cbPriority.setChecked(false);
@@ -141,7 +142,7 @@ public class EditTaskActivity extends AppCompatActivity implements DatePickerDia
         }
 
         tvTaskDate.setText(day.trim() + "/" + month.trim() + "/" + year);
-        currentDate = (day.trim() + "" + month.trim() + "" + year);
+        currentDate = (day.trim() + "/" + month.trim() + "/" + year);
         Log.e("jobDate", currentDate);
     }
 }

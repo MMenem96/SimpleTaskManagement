@@ -102,7 +102,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // Select All Query
         String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=0" + " ORDER BY date(" +
-                test + ")<date('now')  ASC," + Task.COLUMN_TIMESTAMP + "  DESC";
+                test + ")< date('now')  ASC, date("+test+") ASC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -115,7 +115,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 task.setTaskTitle(cursor.getString(cursor.getColumnIndex(Task.COLUMN_TASK_TITLE)));
                 task.setTaskDetails(cursor.getString(cursor.getColumnIndex(Task.COLUMN_TASK_DETAILS)));
                 task.setTaskDueDate(cursor.getString(cursor.getColumnIndex(Task.COLUMN_TASK_DUE_DATE)));
-                Log.e("dueDates", cursor.getString(cursor.getColumnIndex(Task.COLUMN_TASK_DUE_DATE)));
                 task.setTaskPriority(cursor.getString(cursor.getColumnIndex(Task.COLUMN_TASK_PRIORITY)));
                 task.setTaskCompletionStatus(cursor.getInt(cursor.getColumnIndex(Task.COLUMN_TASK_status)));
                 task.setTaskTimeStamp(cursor.getString(cursor.getColumnIndex(Task.COLUMN_TIMESTAMP)));
@@ -137,10 +136,10 @@ public class DbHelper extends SQLiteOpenHelper {
         List<Task> tasks = new ArrayList<>();
 
 
-        String test = "substr(" + Task.COLUMN_TASK_DUE_DATE + ",7,4)||'-'||substr(" + Task.COLUMN_TASK_DUE_DATE + ",4,2)||'-'||substr(" + Task.COLUMN_TASK_DUE_DATE + ",1,2) < date('now')";
+        String test = "substr(" + Task.COLUMN_TASK_DUE_DATE + ",7,4)||'-'||substr(" + Task.COLUMN_TASK_DUE_DATE + ",4,2)||'-'||substr(" + Task.COLUMN_TASK_DUE_DATE + ",1,2) ";
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=0" + " AND " + test + " ORDER BY " +
-                Task.COLUMN_TASK_DUE_DATE + " ASC";
+        String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=0" + " AND " + test + "< date('now') ORDER BY date(" +
+                test + ") ASC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -173,8 +172,9 @@ public class DbHelper extends SQLiteOpenHelper {
         List<Task> tasks = new ArrayList<>();
 
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=1" + " ORDER BY " +
-                Task.COLUMN_TIMESTAMP + " DESC";
+        String test = "substr(" + Task.COLUMN_TASK_DUE_DATE + ",7,4)||'-'||substr(" + Task.COLUMN_TASK_DUE_DATE + ",4,2)||'-'||substr(" + Task.COLUMN_TASK_DUE_DATE + ",1,2) ";
+        String selectQuery = "SELECT  * FROM " + Task.TABLE_NAME + " WHERE " + Task.COLUMN_TASK_status + "=1" + " ORDER BY date(" +
+                test + ") DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
